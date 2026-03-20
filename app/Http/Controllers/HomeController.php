@@ -10,9 +10,7 @@ class HomeController extends Controller
 {
     public function index(): Response
     {
-        $users = User::query()
-            ->latest()
-            ->get(['id', 'name', 'email']);
+        $users = User::query()->latest()->get(['id', 'name', 'email']);
 
         return Inertia::render('Home', [
             'message' => 'Run your shopper experience from one clean, fast, conversion-ready surface.',
