@@ -8,11 +8,11 @@ it('renders the admin dashboard for authenticated users', function (): void {
     Product::factory()->count(3)->create();
 
     $this->actingAs($user)
-        ->get('/admin/dashboard')
+        ->get('/dashboard')
         ->assertOk();
 });
 
 it('redirects guests away from the admin dashboard', function (): void {
-    $this->get('/admin/dashboard')
+    $this->get('/dashboard')
         ->assertRedirect('/login');
 });

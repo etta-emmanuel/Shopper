@@ -30,26 +30,30 @@
                     </span>
                     <div v-if="!collapsed" class="min-w-0">
                         <p>{{ item.label }}</p>
-                        <p class="text-xs text-white/45">{{ item.copy }}</p>
+<!--                        <p class="text-xs text-white/45">{{ item.copy }}</p>-->
                     </div>
                 </Link>
             </div>
         </nav>
 
-        <div v-if="!collapsed" class="m-4 rounded-[1.75rem] border border-white/10 bg-white/5 p-4">
-            <p class="text-xs font-semibold uppercase tracking-[0.28em] text-white/40">Status</p>
-            <p class="mt-3 text-lg font-semibold">Auth modal is global now.</p>
-            <p class="mt-2 text-sm leading-6 text-white/60">
-                Any page using the shared layout can trigger login or signup without re-implementing the UI.
-            </p>
+        <div :class="['m-4 rounded-[1.75rem] border border-white/10 bg-white/5 p-4', showLogout]"
+        >
+            <button
+                type="button"
+                class="inline-flex w-full items-center justify-center rounded-full bg-slate-950 px-4 py-3 text-sm font-semibold text-white transition hover:bg-slate-800"
+                :class="collapsed ? 'text-xs' : ''"
+                :disabled="logoutForm.processing"
+                @click="logout"
+            >
+                Sign out
+            </button>
         </div>
     </aside>
 </template>
 
 <script setup>
 import { computed } from 'vue';
-import { Link, usePage } from '@inertiajs/vue3';
-
+import { Link, usePage, useForm } from '@inertiajs/vue3';
 defineEmits(['navigate']);
 
 defineProps({
@@ -61,7 +65,7 @@ defineProps({
 
 const page = usePage();
 const authUser = computed(() => page.props.auth?.user ?? null);
-
+const showLogout = computed(() => authUser.value ? '' : 'hidden');
 const items = computed(() => {
     const links = [
         {
@@ -72,17 +76,28 @@ const items = computed(() => {
         },
     ];
 
-    if (authUser.value) {
+    if (authUser.value?.type === 'admin') {
         links.push({
             copy: 'Catalog and user admin snapshot',
-            href: '/admin/dashboard',
-            icon: 'AD',
-            label: 'Admin',
+            href: '/dashboard',
+            icon: 'DB',
+            label: 'Dashboard',
         });
     }
 
     return links;
 });
+
+const logoutForm = useForm({});
+
+const logout = () => {
+    logoutForm.post('/logout', {
+        preserveScroll: true,
+        onSuccess: () => {
+            showProfileMenu.value = false;
+        },
+    });
+};
 
 const isActive = (href) => page.url === href || page.url.startsWith(`${href}#`);
 </script>

@@ -7,12 +7,13 @@ use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
-Route::get('/admin/dashboard', [DashboardController::class, 'index'])
-    ->middleware('auth')
-    ->name('admin.dashboard');
 
 Route::post('/login', [AuthController::class, 'login'])->name('login');
 Route::post('/register', [AuthController::class, 'register'])->name('register');
-Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth')->name('logout');
 
-Route::resource('users', UserController::class);
+Route::name('web')->middleware('auth')->group(function () {
+    Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth')->name('logout');
+    Route::get('/dashboard', [DashboardController::class, 'show'])->name('dashboard.show');
+    Route::resource('users', UserController::class);
+});
+

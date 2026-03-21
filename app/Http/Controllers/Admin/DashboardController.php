@@ -10,7 +10,7 @@ use Inertia\Response;
 
 class DashboardController extends Controller
 {
-    public function index(): Response
+    public function show(): Response
     {
         $products = Product::query()
             ->with('images')

@@ -97,7 +97,7 @@ import { useAuthModal } from '../Composables/useAuthModal';
 
 const page = usePage();
 const authUser = computed(() => page.props.auth?.user ?? null);
-
+const authType = authUser.value?.type;
 const logoutForm = useForm({});
 const mobileSidebarOpen = ref(false);
 const showProfileMenu = ref(false);
