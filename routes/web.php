@@ -14,6 +14,6 @@ Route::post('/register', [AuthController::class, 'register'])->name('register');
 Route::name('web')->middleware('auth')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth')->name('logout');
     Route::get('/dashboard', [DashboardController::class, 'show'])->name('dashboard.show');
-    Route::resource('users', UserController::class);
+    Route::resource('users', UserController::class)->only(['index', 'show', 'edit']);
 });
 
