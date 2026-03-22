@@ -94,7 +94,8 @@ const logout = () => {
     logoutForm.post('/logout', {
         preserveScroll: true,
         onSuccess: () => {
-            showProfileMenu.value = false;
+            window.location.reload();
+            toast.show;
         },
     });
 };
