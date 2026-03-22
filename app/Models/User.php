@@ -3,6 +3,7 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Models\Concerns\HasImages;
 use App\Traits\ChecksUserType;
 use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
@@ -18,7 +19,7 @@ use Laravel\Sanctum\HasApiTokens;
 class User extends Authenticatable
 {
     /** @use HasFactory<UserFactory> */
-    use HasFactory, Notifiable, ChecksUserType, HasApiTokens;
+    use HasFactory, Notifiable, ChecksUserType, HasApiTokens, HasImages;
 
     protected $guarded= [
         'remember_token'
