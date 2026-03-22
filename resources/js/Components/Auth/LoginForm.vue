@@ -58,7 +58,7 @@ const loginForm = useForm({
 });
 
 const submit = () => {
-    loginForm.post('/login', {
+    loginForm.post('/sign-in', {
         preserveScroll: true,
         onSuccess: () => {
             loginForm.reset('password');
