@@ -15,13 +15,12 @@ class ProductController extends Controller
     public function store(Request $request): JsonResponse
     {
         $attributes = $this->validated($request);
-        $attributes['slug'] = $attributes['slug'] ?? Str::slug($attributes['name']);
 
         $product = Product::query()->create($attributes);
 
         return response()->json([
             'message' => 'Product created successfully.',
-            'data' => ProductFullResource::make($product->load('images'))->resolve(),
+            'product' => ProductFullResource::make($product->load('images'))->resolve(),
         ], 201);
     }
 

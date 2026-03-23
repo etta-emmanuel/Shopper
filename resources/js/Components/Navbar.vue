@@ -4,7 +4,7 @@
         :class="collapsed ? 'md:w-24' : 'md:w-72'"
     >
         <div class="flex items-center gap-3 border-b border-white/10 px-5 py-6">
-            <div class="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-amber-300 via-orange-400 to-rose-500 text-sm font-black text-slate-950">
+            <div class="flex h-12 w-12 items-center justify-center rounded-2xl bg-linear-to-br from-amber-300 via-orange-400 to-rose-500 text-sm font-black text-slate-950">
                 SH
             </div>
             <div v-if="!collapsed" class="min-w-0">
@@ -15,6 +15,9 @@
 
         <nav class="flex-1 px-4 py-6">
             <p v-if="!collapsed" class="px-3 text-xs font-semibold uppercase tracking-[0.28em] text-white/40">Navigation</p>
+            <div v-if="!collapsed" class="mt-6 inline-flex rounded-full bg-amber-100 px-4 py-2 text-sm font-semibold text-amber-900">
+                {{ date }} • {{ time }}
+            </div>
 
             <div class="mt-3 space-y-2">
                 <Link
@@ -26,7 +29,7 @@
                     @click="$emit('navigate')"
                 >
                     <span class="flex h-10 w-10 items-center justify-center rounded-2xl bg-white/10 text-xs font-bold text-amber-300">
-                        {{ item.icon }}
+                        <i :class="[item.icon, 'text-lg']"></i>
                     </span>
                     <div v-if="!collapsed" class="min-w-0">
                         <p>{{ item.label }}</p>
@@ -52,8 +55,9 @@
 </template>
 
 <script setup>
-import { computed } from 'vue';
-import { Link, usePage, useForm } from '@inertiajs/vue3';
+import { computed, onMounted, ref } from 'vue';
+import { Link, usePage, useForm} from '@inertiajs/vue3';
+
 defineEmits(['navigate']);
 
 defineProps({
@@ -64,30 +68,16 @@ defineProps({
 });
 
 const page = usePage();
+const date = ref('');
+const time = ref('');
+onMounted(() => {
+    const now = new Date();
+    time.value = now.toLocaleTimeString();
+    date.value = now.toDateString();
+});
 const authUser = computed(() => page.props.auth?.user ?? null);
 const showLogout = computed(() => authUser.value ? '' : 'hidden');
-const items = computed(() => {
-    const links = [
-        {
-            copy: 'Landing and dashboard overview',
-            href: '/',
-            icon: 'HM',
-            label: 'Home',
-        },
-    ];
-
-    if (authUser.value?.type === 'admin') {
-        links.push({
-            copy: 'Catalog and user admin snapshot',
-            href: '/dashboard',
-            icon: 'DB',
-            label: 'Dashboard',
-        });
-    }
-
-    return links;
-});
-
+const items = computed(() => page.props.navItems ?? []);
 const logoutForm = useForm({});
 
 const logout = () => {
