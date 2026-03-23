@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Admin;
 
+use App\Http\Controllers\Controller;
 use App\Http\Resources\ProductFullResource;
 use App\Http\Resources\ProductLightResource;
 use App\Models\Product;
