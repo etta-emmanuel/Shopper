@@ -1,3 +1,26 @@
+<script setup>
+    import { useForm } from '@inertiajs/vue3';
+
+    const emit = defineEmits(['success']);
+
+    const registerForm = useForm({
+        name: '',
+        email: '',
+        password: '',
+        password_confirmation: '',
+    });
+
+    const submit = () => {
+        registerForm.post('/register', {
+            preserveScroll: true,
+            onSuccess: () => {
+                registerForm.reset();
+                emit('success');
+            },
+        });
+    };
+</script>
+
 <template>
     <form class="grid gap-4" @submit.prevent="submit">
         <label class="block">
@@ -59,25 +82,3 @@
     </form>
 </template>
 
-<script setup>
-import { useForm } from '@inertiajs/vue3';
-
-const emit = defineEmits(['success']);
-
-const registerForm = useForm({
-    name: '',
-    email: '',
-    password: '',
-    password_confirmation: '',
-});
-
-const submit = () => {
-    registerForm.post('/register', {
-        preserveScroll: true,
-        onSuccess: () => {
-            registerForm.reset();
-            emit('success');
-        },
-    });
-};
-</script>

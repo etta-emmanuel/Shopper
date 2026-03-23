@@ -55,6 +55,6 @@ class AuthController extends Controller
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
-        return back()->with('status', 'Signed out.');
+        return back()->with('status', 'Signed out successfully.');
     }
 }

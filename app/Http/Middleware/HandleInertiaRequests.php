@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Services\NavService;
 use Illuminate\Http\Request;
 use Inertia\Middleware;
 
@@ -35,6 +36,7 @@ class HandleInertiaRequests extends Middleware
      */
     public function share(Request $request): array
     {
+        $navService = new NavService();
         return [
             ...parent::share($request),
             'auth' => [
@@ -42,6 +44,7 @@ class HandleInertiaRequests extends Middleware
                     'id', 'name', 'email', 'type'
                     ]),
             ],
+            'navItems' => fn () => $navService->getRoutes(),
             'flash' => [
                 'success' => fn () => $request->session()->get('success'),
                 'error' => fn () => $request->session()->get('error'),

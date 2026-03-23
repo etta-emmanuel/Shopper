@@ -1,4 +1,55 @@
+<script setup>
+    import { computed, ref } from 'vue';
+    import { useForm, usePage } from '@inertiajs/vue3';
+    import AuthModal from '../Components/Auth/AuthModal.vue';
+    import Navbar from '../Components/Navbar.vue';
+    import { useAuthModal } from '../Composables/useAuthModal';
+
+    const page = usePage();
+    const authUser = computed(() => page.props.auth?.user ?? null);
+    const flashError = computed(() => page.props.flash?.error ?? null);
+    const flashSuccess = computed(() => page.props.flash?.success ?? null);
+
+    const logoutForm = useForm({});
+    const showProfileMenu = ref(false);
+    const sidebarCollapsed = ref(false);
+    const mobileSidebarOpen = ref(false);
+
+    const { openAuth } = useAuthModal();
+
+    const initials = (name) =>
+        name ?. split(' ') . filter(Boolean)
+            . slice(0, 2)
+            . map((part) => part[0]?.toUpperCase())
+            . join('') || 'UI';
+
+    const toggleProfile = () => {
+        if (authUser.value) {
+            showProfileMenu.value = !showProfileMenu.value;
+            return;
+        }
+
+        openAuth('login');
+    };
+
+    const logout = () => {
+        logoutForm.post('/logout', {
+            preserveScroll: true,
+            onSuccess: () => {
+                window.location.reload();
+            },
+        });
+    };
+</script>
+
 <template>
+    <div v-if="flashSuccess" class="fixed right-6 top-6 z-50 rounded-lg bg-green-600 px-4 py-3 text-white">
+        {{ flashSuccess }}
+    </div>
+
+    <div v-if="flashError" class="fixed right-6 top-20 z-50 rounded-lg bg-red-600 px-4 py-3 text-white">
+        {{ flashError }}
+    </div>
     <div class="min-h-screen bg-[linear-gradient(160deg,#fff7ed_0%,#ffedd5_24%,#f8fafc_65%,#e2e8f0_100%)] text-slate-950">
         <div v-if="mobileSidebarOpen" class="fixed inset-0 z-40 bg-slate-950/55 backdrop-blur-sm md:hidden" @click="mobileSidebarOpen = false"></div>
 
@@ -87,47 +138,3 @@
         <AuthModal />
     </div>
 </template>
-
-<script setup>
-import { computed, ref } from 'vue';
-import { useForm, usePage } from '@inertiajs/vue3';
-import AuthModal from '../Components/Auth/AuthModal.vue';
-import Navbar from '../Components/Navbar.vue';
-import { useAuthModal } from '../Composables/useAuthModal';
-
-const page = usePage();
-const authUser = computed(() => page.props.auth?.user ?? null);
-const authType = authUser.value?.type;
-const logoutForm = useForm({});
-const mobileSidebarOpen = ref(false);
-const showProfileMenu = ref(false);
-const sidebarCollapsed = ref(false);
-
-const { openAuth } = useAuthModal();
-
-const initials = (name) =>
-    name
-        ?.split(' ')
-        .filter(Boolean)
-        .slice(0, 2)
-        .map((part) => part[0]?.toUpperCase())
-        .join('') || 'UI';
-
-const toggleProfile = () => {
-    if (authUser.value) {
-        showProfileMenu.value = !showProfileMenu.value;
-        return;
-    }
-
-    openAuth('login');
-};
-
-const logout = () => {
-    logoutForm.post('/logout', {
-        preserveScroll: true,
-        onSuccess: () => {
-            window.location.reload();
-        },
-    });
-};
-</script>

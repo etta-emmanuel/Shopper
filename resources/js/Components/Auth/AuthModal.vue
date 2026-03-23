@@ -1,3 +1,15 @@
+<script setup>
+    import { computed } from 'vue';
+    import LoginForm from './LoginForm.vue';
+    import { usePage } from '@inertiajs/vue3';
+    import RegisterForm from './RegisterForm.vue';
+    import { useAuthModal } from '../../Composables/useAuthModal';
+
+    const page = usePage();
+    const authUser = computed(() => page.props.auth?.user ?? null);
+    const { authMode, closeAuth, openAuth, showAuthModal } = useAuthModal();
+</script>
+
 <template>
     <Teleport to="body">
         <div
@@ -6,7 +18,7 @@
         >
             <div class="absolute inset-0" @click="closeAuth"></div>
 
-            <div class="relative w-full max-w-xl rounded-[2rem] border border-white/50 bg-white p-7 shadow-[0_30px_100px_rgba(15,23,42,0.24)]">
+            <div class="relative w-full max-w-xl rounded-4xl border border-white/50 bg-white p-7 shadow-[0_30px_100px_rgba(15,23,42,0.24)]">
                 <div class="flex items-start justify-between gap-4">
                     <div>
                         <p class="text-xs font-semibold uppercase tracking-[0.28em] text-slate-500">Account access</p>
@@ -49,14 +61,3 @@
     </Teleport>
 </template>
 
-<script setup>
-import { computed } from 'vue';
-import { usePage } from '@inertiajs/vue3';
-import LoginForm from './LoginForm.vue';
-import RegisterForm from './RegisterForm.vue';
-import { useAuthModal } from '../../Composables/useAuthModal';
-
-const page = usePage();
-const authUser = computed(() => page.props.auth?.user ?? null);
-const { authMode, closeAuth, openAuth, showAuthModal } = useAuthModal();
-</script>

@@ -1,3 +1,27 @@
+<script setup>
+    import { useForm, usePage } from '@inertiajs/vue3';
+
+    const emit = defineEmits(['success']);
+
+    const page = usePage();
+
+    const loginForm = useForm({
+        email: '',
+        password: '',
+        remember: false,
+    });
+
+    const submit = () => {
+        loginForm.post('/sign-in', {
+            preserveScroll: true,
+            onSuccess: () => {
+                loginForm.reset('password');
+                emit('success');
+            },
+        });
+    };
+</script>
+
 <template>
     <form class="space-y-4" @submit.prevent="submit">
         <label class="block">
@@ -44,26 +68,3 @@
     </form>
 </template>
 
-<script setup>
-import { useForm, usePage } from '@inertiajs/vue3';
-
-const emit = defineEmits(['success']);
-
-const page = usePage();
-
-const loginForm = useForm({
-    email: '',
-    password: '',
-    remember: false,
-});
-
-const submit = () => {
-    loginForm.post('/sign-in', {
-        preserveScroll: true,
-        onSuccess: () => {
-            loginForm.reset('password');
-            emit('success');
-        },
-    });
-};
-</script>

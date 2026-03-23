@@ -1,5 +1,21 @@
+<script setup>
+    defineProps({
+        product: {
+            type: Object,
+            required: true,
+        },
+    });
+
+    const currency = (value) =>
+        new Intl.NumberFormat('en-US', {
+            currency: 'USD',
+            style: 'currency',
+        }).format(Number(value || 0));
+</script>
+
+
 <template>
-    <article class="group overflow-hidden rounded-[2rem] border border-white/70 bg-white/90 shadow-[0_24px_70px_rgba(15,23,42,0.08)] backdrop-blur transition hover:-translate-y-1">
+    <article class="group overflow-hidden rounded-4xl border border-white/70 bg-white/90 shadow-[0_24px_70px_rgba(15,23,42,0.08)] backdrop-blur transition hover:-translate-y-1">
         <div class="relative aspect-[4/4.4] overflow-hidden bg-slate-100">
             <img
                 v-if="product.src"
@@ -38,18 +54,3 @@
         </div>
     </article>
 </template>
-
-<script setup>
-defineProps({
-    product: {
-        type: Object,
-        required: true,
-    },
-});
-
-const currency = (value) =>
-    new Intl.NumberFormat('en-US', {
-        currency: 'USD',
-        style: 'currency',
-    }).format(Number(value || 0));
-</script>

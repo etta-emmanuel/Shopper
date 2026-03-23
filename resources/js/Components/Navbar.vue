@@ -1,3 +1,42 @@
+<script setup>
+    import { computed, onMounted, ref } from 'vue';
+    import { Link, usePage, useForm} from '@inertiajs/vue3';
+
+    defineEmits(['navigate']);
+
+    defineProps({
+        collapsed: {
+            type: Boolean,
+            default: false,
+        },
+    });
+
+    const page = usePage();
+    const date = ref('');
+    const time = ref('');
+    onMounted(() => {
+        const now = new Date();
+        time.value = now.toLocaleTimeString();
+        date.value = now.toDateString();
+    });
+    const authUser = computed(() => page.props.auth?.user ?? null);
+    const showLogout = computed(() => authUser.value ? '' : 'hidden');
+    const items = computed(() => page.props.navItems ?? []);
+    const logoutForm = useForm({});
+
+    const logout = () => {
+        logoutForm.post('/logout', {
+            preserveScroll: true,
+            onSuccess: () => {
+                window.location.reload();
+                toast.show;
+            },
+        });
+    };
+
+    const isActive = (href) => page.url === href || page.url.startsWith(`${href}#`);
+</script>
+
 <template>
     <aside
         class="flex h-full flex-col border-r border-white/10 bg-slate-950 text-white"
@@ -54,41 +93,3 @@
     </aside>
 </template>
 
-<script setup>
-import { computed, onMounted, ref } from 'vue';
-import { Link, usePage, useForm} from '@inertiajs/vue3';
-
-defineEmits(['navigate']);
-
-defineProps({
-    collapsed: {
-        type: Boolean,
-        default: false,
-    },
-});
-
-const page = usePage();
-const date = ref('');
-const time = ref('');
-onMounted(() => {
-    const now = new Date();
-    time.value = now.toLocaleTimeString();
-    date.value = now.toDateString();
-});
-const authUser = computed(() => page.props.auth?.user ?? null);
-const showLogout = computed(() => authUser.value ? '' : 'hidden');
-const items = computed(() => page.props.navItems ?? []);
-const logoutForm = useForm({});
-
-const logout = () => {
-    logoutForm.post('/logout', {
-        preserveScroll: true,
-        onSuccess: () => {
-            window.location.reload();
-            toast.show;
-        },
-    });
-};
-
-const isActive = (href) => page.url === href || page.url.startsWith(`${href}#`);
-</script>
