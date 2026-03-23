@@ -10,21 +10,23 @@ class UserSeeder extends Seeder
 {
     public function run(): void
     {
-        $admin = User::factory()->admin()->create();
-
-        Image::factory()
-            ->count(1)
-            ->for($admin, 'imageable')
-            ->create();
-
-        User::factory()
-            ->count(9)
-            ->create()
-            ->each(function (User $user): void {
-                Image::factory()
-                    ->count(rand(1, 2))
-                    ->for($user, 'imageable')
-                    ->create();
-            });
+        $users = [
+            [
+                'name' => 'Etta Emanuel',
+                'email' => 'ettaemmanuelminteh@gmail.com',
+                'password' => bcrypt('Emmanuel1.'),
+                'type' => 'admin',
+            ],
+            [
+                'name' => 'Real Me',
+                'email' => 'iam.ethanal.7@gmail.com',
+                'password' => bcrypt('Emmanuel1.'),
+                'type' => 'customer',
+            ]
+        ];
+        foreach ($users as $user) {
+            User::factory()->create($user);
+        }
+        User::factory(10)->create();
     }
 }
