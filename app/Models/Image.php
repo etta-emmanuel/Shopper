@@ -2,18 +2,22 @@
 
 namespace App\Models;
 
+use App\Observers\ImageObserver;
+use App\Observers\Observable;
 use Database\Factories\ImageFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
+use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 
+#[ObservedBy([ImageObserver::class])]
 #[Fillable(['img_url', 'alt_text', 'sort_order'])]
 class Image extends Model
 {
     /** @use HasFactory<ImageFactory> */
-    use HasFactory;
+    use HasFactory, Observable;
 
     protected $guarded = [];
 
