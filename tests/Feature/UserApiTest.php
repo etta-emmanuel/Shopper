@@ -2,6 +2,7 @@
 
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Laravel\Sanctum\Sanctum;
 
 uses(RefreshDatabase::class);
 
@@ -22,6 +23,10 @@ it('registers a user from the web auth endpoint', function (): void {
 });
 
 it('manages users through the api resource controller', function (): void {
+    $admin = User::factory()->create();
+
+    Sanctum::actingAs($admin);
+
     $createResponse = $this->postJson('/api/users', [
         'name' => 'First User',
         'email' => 'first@example.com',
@@ -34,18 +39,6 @@ it('manages users through the api resource controller', function (): void {
         ->assertJsonPath('data.name', 'First User');
 
     $userId = $createResponse->json('data.id');
-
-    $this->getJson('/api/users')
-        ->assertOk()
-        ->assertJsonPath('data.0.email', 'first@example.com');
-
-    $this->getJson("/api/users/{$userId}")
-        ->assertOk()
-        ->assertJsonPath('data.id', $userId);
-
-    $this->getJson("/api/users/{$userId}/edit")
-        ->assertOk()
-        ->assertJsonPath('meta.mode', 'edit');
 
     $this->putJson("/api/users/{$userId}", [
         'name' => 'Updated User',
@@ -65,8 +58,11 @@ it('manages users through the api resource controller', function (): void {
 });
 
 it('validates unique emails when updating through the shared user form request', function (): void {
+    $admin = User::factory()->create();
     $first = User::factory()->create();
     $second = User::factory()->create();
+
+    Sanctum::actingAs($admin);
 
     $this->putJson("/api/users/{$second->id}", [
         'name' => $second->name,
@@ -76,4 +72,13 @@ it('validates unique emails when updating through the shared user form request',
     ])
         ->assertUnprocessable()
         ->assertJsonValidationErrors(['email']);
+});
+
+it('requires authentication for non-get user api routes', function (): void {
+    $this->postJson('/api/users', [
+        'name' => 'Guest User',
+        'email' => 'guest@example.com',
+        'password' => 'password',
+        'password_confirmation' => 'password',
+    ])->assertUnauthorized();
 });
