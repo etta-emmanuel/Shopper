@@ -14,6 +14,8 @@ return new class extends Migration
             $table->string('slug')->unique();
             $table->decimal('base_price', 10, 2);
             $table->decimal('discount', 10, 2)->default(0);
+            $table->integer('quantity')->default(0);
+            $table->boolean('active')->default(true);
             $table->timestamps();
         });
     }

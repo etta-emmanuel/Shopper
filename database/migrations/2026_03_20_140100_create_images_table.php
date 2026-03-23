@@ -15,6 +15,7 @@ return new class extends Migration
             $table->string('alt_text')->nullable();
             $table->unsignedInteger('sort_order')->default(0);
             $table->boolean('is_default')->default(false);
+            $table->boolean('active')->default(true);
             $table->timestamps();
         });
     }
