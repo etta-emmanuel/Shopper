@@ -15,6 +15,7 @@ return new class extends Migration
             $table->decimal('base_price', 10, 2);
             $table->decimal('discount', 10, 2)->default(0);
             $table->integer('quantity')->default(0);
+            $table->boolean('featured')->default(false);
             $table->boolean('active')->default(true);
             $table->timestamps();
         });
