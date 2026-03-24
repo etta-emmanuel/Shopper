@@ -15,11 +15,13 @@ class ProductFactory extends Factory
     {
         $name = fake()->unique()->words(rand(2, 3), true);
         $basePrice = fake()->randomFloat(2, 20, 500);
+        $description = implode(' ', fake()->paragraphs());
 
         return [
             'name' => Str::title($name),
             'slug' => Str::slug($name),
             'base_price' => $basePrice,
+            'description' => Str::limit($name . ' ' . $description, 35),
         ];
     }
 }

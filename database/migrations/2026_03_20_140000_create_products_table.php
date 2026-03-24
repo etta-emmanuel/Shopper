@@ -17,6 +17,7 @@ return new class extends Migration
             $table->integer('quantity')->default(0);
             $table->boolean('featured')->default(false);
             $table->boolean('active')->default(true);
+            $table->text('description')->nullable();
             $table->timestamps();
         });
     }
