@@ -95,7 +95,10 @@
                                 @click="toggleProfile"
                             >
                                 <span class="text-sm font-black">
-                                    {{ authUser ? initials(authUser.name) : 'UI' }}
+                                    <span v-if="authUser">{{ initials(authUser.name) }}</span>
+                                    <span v-else>
+                                        <i class="bi bi-person-fill"></i>
+                                    </span>
                                 </span>
                             </button>
 
