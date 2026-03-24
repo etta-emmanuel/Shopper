@@ -48,12 +48,11 @@
             </div>
             <div v-if="!collapsed" class="min-w-0">
                 <p class="text-xs font-semibold uppercase tracking-[0.32em] text-amber-300">Shopper</p>
-                <p class="mt-1 text-sm text-white/65">Retail workspace</p>
+                <p class="mt-1 text-sm text-white/65">Retail Haven</p>
             </div>
         </div>
 
-        <nav class="flex-1 px-4 py-6">
-            <p v-if="!collapsed" class="px-3 text-xs font-semibold uppercase tracking-[0.28em] text-white/40">Navigation</p>
+        <nav class="flex-1 px-4 py-3">
             <div v-if="!collapsed" class="mt-6 inline-flex rounded-full bg-amber-100 px-4 py-2 text-sm font-semibold text-amber-900">
                 {{ date }} • {{ time }}
             </div>
@@ -72,22 +71,22 @@
                     </span>
                     <div v-if="!collapsed" class="min-w-0">
                         <p>{{ item.label }}</p>
-<!--                        <p class="text-xs text-white/45">{{ item.copy }}</p>-->
                     </div>
                 </Link>
             </div>
         </nav>
 
-        <div :class="['m-4 rounded-[1.75rem] border border-white/10 bg-white/5 p-4', showLogout]"
+        <div :class="['m-4 rounded-[1.75rem] border border-white/10 bg-white/5 p-2', showLogout]"
         >
             <button
                 type="button"
-                class="inline-flex w-full items-center justify-center rounded-full bg-slate-950 px-4 py-3 text-sm font-semibold text-white transition hover:bg-slate-800"
-                :class="collapsed ? 'text-xs' : ''"
+                class="inline-flex w-full items-center justify-between rounded-full bg-slate-950
+                    px-1 py-1 text-sm font-semibold text-white transition hover:bg-slate-800"
                 :disabled="logoutForm.processing"
                 @click="logout"
             >
-                Sign out
+                <i class="bi bi-box-arrow-left"></i>
+                <span v-if="!collapsed">Sign out</span>
             </button>
         </div>
     </aside>

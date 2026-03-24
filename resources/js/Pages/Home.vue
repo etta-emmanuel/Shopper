@@ -1,7 +1,72 @@
+<script setup>
+    import { computed } from 'vue';
+    import { Link, router, usePage } from '@inertiajs/vue3';
+    import AppLayout from '../Layouts/AppLayout.vue';
+    import { useAuthModal } from '../Composables/useAuthModal';
+
+    defineOptions({
+        layout: AppLayout,
+    });
+
+    defineProps({
+        message: {
+            type: String,
+            default: '',
+        },
+        date: {
+            type: String,
+            default: '',
+        },
+    });
+
+    const page = usePage();
+    const authUser = computed(() => page.props.auth?.user ?? null);
+    const { openAuth } = useAuthModal();
+
+    const highlights = computed(() => [
+        {
+            title: 'Global auth modal',
+            copy: 'Login and signup are now shared across the full app shell instead of being recreated on each page.',
+        },
+        {
+            title: 'Dashboard for heavy work',
+            copy: 'Admin-specific analytics, listings, and management actions have been moved away from the homepage.',
+        },
+        {
+            title: 'Cleaner first impression',
+            copy: 'This screen now behaves like a calmer landing page while the rest of the app handles operations.',
+        },
+    ]);
+
+    const panels = computed(() => [
+        {
+            copy: 'Use the sidebar and shared layout to move between shopper pages without rebuilding the same chrome.',
+            eyebrow: 'Navigation',
+            title: 'Reusable shell',
+        },
+        {
+            copy: 'Guests can authenticate from anywhere, while signed-in users keep the same profile entry point across the app.',
+            eyebrow: 'Access',
+            title: 'Consistent auth',
+        },
+        {
+            copy: authUser.value?.type === 'admin'
+                ? 'Your dashboard remains the place for products, users, and operational summaries.'
+                : 'Customers stay on the home experience while admin-only operational tools stay out of the way.',
+            eyebrow: 'Focus',
+            title: 'Right content, right place',
+        },
+    ]);
+
+    const reloadHome = () => {
+        router.reload({ only: ['message', 'date'] });
+    };
+</script>
+
 <template>
     <div class="space-y-8">
         <section class="grid gap-8 xl:grid-cols-[1.15fr_0.85fr]">
-            <div class="rounded-[2rem] border border-white/70 bg-white/85 p-8 shadow-[0_30px_90px_rgba(15,23,42,0.08)] backdrop-blur xl:p-10">
+            <div class="rounded-4xl border border-white/70 bg-white/85 p-8 shadow-[0_30px_90px_rgba(15,23,42,0.08)] backdrop-blur xl:p-10">
                 <p class="inline-flex rounded-full border border-amber-300 bg-amber-50 px-4 py-1 text-xs font-semibold uppercase tracking-[0.28em] text-amber-800">
                     Shopper home
                 </p>
@@ -50,7 +115,7 @@
             </div>
 
             <div class="grid gap-6">
-                <section class="rounded-[2rem] bg-slate-950 p-7 text-white shadow-[0_30px_90px_rgba(15,23,42,0.16)]">
+                <section class="rounded-4xl bg-slate-950 p-7 text-white shadow-[0_30px_90px_rgba(15,23,42,0.16)]">
                     <div class="flex items-center justify-between gap-4">
                         <div>
                             <p class="text-xs font-semibold uppercase tracking-[0.28em] text-amber-300">Shared access</p>
@@ -80,7 +145,7 @@
                     </div>
                 </section>
 
-                <section class="rounded-[2rem] border border-white/70 bg-white/85 p-7 shadow-[0_30px_90px_rgba(15,23,42,0.08)] backdrop-blur">
+                <section class="rounded-4xl border border-white/70 bg-white/85 p-7 shadow-[0_30px_90px_rgba(15,23,42,0.08)] backdrop-blur">
                     <p class="text-xs font-semibold uppercase tracking-[0.28em] text-slate-500">Today</p>
                     <h2 class="mt-2 text-2xl font-bold text-slate-950">Clean workspace state</h2>
                     <p class="mt-4 text-sm leading-7 text-slate-700">
@@ -98,7 +163,7 @@
             <article
                 v-for="panel in panels"
                 :key="panel.title"
-                class="rounded-[2rem] border border-white/70 bg-white/85 p-7 shadow-[0_30px_90px_rgba(15,23,42,0.08)] backdrop-blur"
+                class="rounded-4xl border border-white/70 bg-white/85 p-7 shadow-[0_30px_90px_rgba(15,23,42,0.08)] backdrop-blur"
             >
                 <p class="text-xs font-semibold uppercase tracking-[0.28em] text-slate-500">{{ panel.eyebrow }}</p>
                 <h3 class="mt-3 text-2xl font-bold tracking-[-0.03em] text-slate-950">{{ panel.title }}</h3>
@@ -108,67 +173,3 @@
     </div>
 </template>
 
-<script setup>
-import { computed } from 'vue';
-import { Link, router, usePage } from '@inertiajs/vue3';
-import AppLayout from '../Layouts/AppLayout.vue';
-import { useAuthModal } from '../Composables/useAuthModal';
-
-defineOptions({
-    layout: AppLayout,
-});
-
-defineProps({
-    message: {
-        type: String,
-        default: '',
-    },
-    date: {
-        type: String,
-        default: '',
-    },
-});
-
-const page = usePage();
-const authUser = computed(() => page.props.auth?.user ?? null);
-const { openAuth } = useAuthModal();
-
-const highlights = computed(() => [
-    {
-        title: 'Global auth modal',
-        copy: 'Login and signup are now shared across the full app shell instead of being recreated on each page.',
-    },
-    {
-        title: 'Dashboard for heavy work',
-        copy: 'Admin-specific analytics, listings, and management actions have been moved away from the homepage.',
-    },
-    {
-        title: 'Cleaner first impression',
-        copy: 'This screen now behaves like a calmer landing page while the rest of the app handles operations.',
-    },
-]);
-
-const panels = computed(() => [
-    {
-        copy: 'Use the sidebar and shared layout to move between shopper pages without rebuilding the same chrome.',
-        eyebrow: 'Navigation',
-        title: 'Reusable shell',
-    },
-    {
-        copy: 'Guests can authenticate from anywhere, while signed-in users keep the same profile entry point across the app.',
-        eyebrow: 'Access',
-        title: 'Consistent auth',
-    },
-    {
-        copy: authUser.value?.type === 'admin'
-            ? 'Your dashboard remains the place for products, users, and operational summaries.'
-            : 'Customers stay on the home experience while admin-only operational tools stay out of the way.',
-        eyebrow: 'Focus',
-        title: 'Right content, right place',
-    },
-]);
-
-const reloadHome = () => {
-    router.reload({ only: ['message', 'date'] });
-};
-</script>

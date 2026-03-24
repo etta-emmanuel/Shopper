@@ -48,7 +48,8 @@
                 </div>
 
                 <div class="rounded-full bg-amber-100 px-3 py-2 text-xs font-semibold uppercase tracking-[0.24em] text-amber-900">
-                    #{{ product.id }}
+                    <link>
+                    <i class="bi bi-cart fs-4"></i>
                 </div>
             </div>
         </div>
