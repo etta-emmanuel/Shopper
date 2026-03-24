@@ -18,6 +18,7 @@ class ProductLightResource extends JsonResource
             'name' => $this->name,
             'price' => max((float) $this->base_price - (float) $this->discount, 0),
             'src' => $image?->medium,
+            'description' => $this->description,
         ];
     }
 }

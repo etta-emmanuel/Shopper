@@ -29,6 +29,7 @@ class ProductFullResource extends JsonResource
             'discount' => (float) $this->discount,
             'price' => max((float) $this->base_price - (float) $this->discount, 0),
             'src' => $images->first()['full'] ?? null,
+            'description' => $this->description,
             'images' => $images,
         ];
     }
